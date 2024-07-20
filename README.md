@@ -5,7 +5,9 @@ Producto como proyecto fianl de Computacion Grafica de Ingeniería de Software, 
   - **Nombre:** SAJE inc.
   - **Mision:**
   - **Visión:**
+
   - **Intergrantes:** **S**antiago Murillo, **S**aid Luna, **A**lexander Morales, **J**uan Diego Suarez, **E**liath Velasco
+  - **Profesor:** Leonardo Valdivieso
 
 ## Idea
 
