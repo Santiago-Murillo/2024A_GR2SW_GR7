@@ -1,2 +1,26 @@
-# ProyectoCGrafica2024A
-Videojuego como proyecto de Computacion Grafica de la EPN
+# 2024A_GR2SW_GRx: ProyectoCGrafica2024A
+Producto como proyecto fianl de Computacion Grafica de Ingeniería de Software, Escuela Politécnica Nacional.
+
+## Empresa
+  - **Nombre:** SAJE inc.
+  - **Mision:**
+  - **Visión:**
+  - **Intergrantes:** **S**antiago Murillo, **S**aid Luna, **A**lexander Morales, **J**uan Diego Suarez, **E**liath Velasco
+
+## Idea
+
+"Viajando por el espacio"
+
+### Lluvia de ideas
+Simulador
+Sistema solar
+Universo
+Nave
+
+### Posibles modelos a usar:
+
+- [Estrellas](https://sketchfab.com/3d-models/need-some-space-d6521362b37b48e3a82bce4911409303)
+- [Planeta Tierra](https://sketchfab.com/3d-models/earth-5ce4b1465c83432d9bb7e3c30232c02b)
+
+### Proyectos similares
+- [Sistema Solar](https://youtu.be/fqXXwvij-Tc?si=zgS2olXHU5tc7oDQ)
