@@ -23,6 +23,7 @@ Nave
 
 - [Estrellas](https://sketchfab.com/3d-models/need-some-space-d6521362b37b48e3a82bce4911409303)
 - [Planeta Tierra](https://sketchfab.com/3d-models/earth-5ce4b1465c83432d9bb7e3c30232c02b)
+- [SciFi Hallway](https://sketchfab.com/3d-models/scifi-hallway-3f57200663904355a21f6ec6cb768594)
 
 ### Proyectos similares
 - [Sistema Solar](https://youtu.be/fqXXwvij-Tc?si=zgS2olXHU5tc7oDQ)
