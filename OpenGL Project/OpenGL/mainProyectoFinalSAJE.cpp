@@ -20,12 +20,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
+void calculateRainbowColor(float time, float& r, float& g, float& b);
+
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -111,7 +113,14 @@ int main()
 
         // render
         // ------
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+
+        // Update color based on time
+        float timeValue = glfwGetTime();
+        float red, green, blue;
+        calculateRainbowColor(timeValue, red, green, blue);
+
+        glClearColor(red, green, blue, 1.0f);
+        //glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
@@ -125,8 +134,9 @@ int main()
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        //model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
        
@@ -168,6 +178,8 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(RUN, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         camera.ProcessKeyboard(WALK, deltaTime);
+
+    camera.Position.y = 3.0f;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -204,4 +216,20 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
+}
+
+void calculateRainbowColor(float time, float& r, float& g, float& b) {
+    float frequency = 1.0f; // Ajusta la frecuencia para controlar la velocidad del cambio de color
+    float phase = time * frequency;
+
+    // Sinusoides para los colores base del arcoíris
+    r = std::sin(phase + 0.0f) * 0.5f + 0.5f;
+    g = std::sin(phase + 2.0f) * 0.5f + 0.5f;
+    b = std::sin(phase + 4.0f) * 0.5f + 0.5f;
+
+    // Variar la intensidad para pasar por negro y blanco
+    float intensity = std::sin(phase * 1.0f) * 0.5f + 0.5f;
+    r *= intensity;
+    g *= intensity;
+    b *= intensity;
 }
