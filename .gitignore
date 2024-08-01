@@ -349,3 +349,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/OpenGL Project/x64/Debug/OpenGL.exe
+/OpenGL Project/OpenGL/x64/Debug

@@ -81,7 +81,7 @@ int main()
 
     // build and compile shaders
     // -------------------------
-    Shader ourShader("shaders/shader_exercise16_mloading.vs", "shaders/shader_exercise16_mloading.fs");
+    Shader ourShader("shaders/shader_ProyectoSAJE.vs", "shaders/shader_ProyectoSAJE.fs");
 
     // load models
     // -----------
