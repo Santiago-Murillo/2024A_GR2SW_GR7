@@ -27,7 +27,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 3.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -87,9 +87,8 @@ int main()
 
     // load models
     // -----------
-    //Model ourModel(FileSystem::getPath("resources/objects/backpack/backpack.obj"));
-    Model ourModel("model/scifi_hallway/scifi_hallway.obj");
-    //Model ourModel("model/backpack/backpack.obj");
+    Model scifi_hallway("model/scifi_hallway/scifi_hallway.obj");
+    Model drone("model/drone/drone.obj");
     
     
     // draw in wireframe
@@ -116,29 +115,61 @@ int main()
 
         // Update color based on time
         float timeValue = glfwGetTime();
-        float red, green, blue;
-        calculateRainbowColor(timeValue, red, green, blue);
+        //float red, green, blue;
+        //calculateRainbowColor(timeValue, red, green, blue);
 
-        glClearColor(red, green, blue, 1.0f);
-        //glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        //glClearColor(red, green, blue, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
         glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
-        // render the loaded model
+
+
+        // render scifi_hallway
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        scifi_hallway.Draw(ourShader);
+
+
+        // render far scifi_hallway
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(150.0f, 30.0f, -150.0f));
+        model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        ourShader.setMat4("model", model);
+        scifi_hallway.Draw(ourShader);
+
+        // render drone
+        // Forma medio trucada para rotar en base a un eje, funciona raro, se recomienda buscar otra foma
+        float radioDron = 25.0f;
+        // Eje de rotación arbitrario
+        glm::vec3 axis(0.0f, 0.0f, 1.0f); // Ajusta este vector según sea necesario
+        // Centro de rotación
+        glm::vec3 center(-7.0f, 0.0f, 0.0f); // Ajusta el centro según sea necesario
+        axis = glm::normalize(axis);
+
+        model = glm::mat4(1.0f);
+        // Trasladar el modelo al centro de rotación
+        model = glm::translate(model, center);
+        // Rotar alrededor del eje arbitrario
+        model = glm::rotate(model, timeValue / 2, axis);
+        // Trasladar el modelo al radio deseado desde el centro de rotación
+        model = glm::translate(model, glm::vec3(radioDron, 0.0f, 0.0f));
+
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        ourShader.setMat4("model", model);
+        drone.Draw(ourShader);
        
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -179,7 +210,7 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         camera.ProcessKeyboard(WALK, deltaTime);
 
-    camera.Position.y = 3.0f;
+    //camera.Position.y = 3.0f;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

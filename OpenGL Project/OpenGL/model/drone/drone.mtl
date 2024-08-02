@@ -1,0 +1,13 @@
+# Blender 4.2.0 MTL File: 'None'
+# www.blender.org
+
+newmtl ZenUV_Generic_Material.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.299446 0.299446 0.299446
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ZenUV_Generic_Material.001_baseColor.png
+map_Ke ZenUV_Generic_Material.001_emissive.png
+map_Bump -bm 1.000000 ZenUV_Generic_Material.001_normal.png
