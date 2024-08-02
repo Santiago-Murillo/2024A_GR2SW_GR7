@@ -27,3 +27,5 @@ Nave
 
 ### Proyectos similares
 - [Sistema Solar](https://youtu.be/fqXXwvij-Tc?si=zgS2olXHU5tc7oDQ)
+
+https://jaxry.github.io/panorama-to-cubemap/
