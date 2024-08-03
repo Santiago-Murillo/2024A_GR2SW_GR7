@@ -1,5 +1,9 @@
+<p align="center">
+  <img src="Recursos/images/EpnLogo.jpg" alt="Logo Universidad" width="200">
+</p>
+
 # 2024A_GR2SW_GRx: ProyectoCGrafica2024A
-Producto como proyecto fianl de Computacion Grafica de Ingeniería de Software, Escuela Politécnica Nacional.
+Producto como proyecto final de Computacion Grafica de Ingeniería de Software, Escuela Politécnica Nacional.
 
 ## Empresa
   - **Nombre:** SAJE inc.
@@ -25,6 +29,38 @@ Nave
 #### SciFi Hallway
 ![SciFi Hallway](Recursos/images/modeloNave.png)
 
+#### Drone
+![Drone](Recursos/images/modeloDrone.png)
+
+#### Sol
+![Sol](Recursos/images/modeloSol.png)
+
+#### Planeta Tierra
+![Tierra](Recursos/images/modeloTierra.png)
+
+#### Planeta Saturno
+![Saturno](Recursos/images/modeloSaturno.png)
+
+#### Planeta Marte
+![Marte](Recursos/images/modeloMarte.png)
+
+#### Planeta Venus
+![Venus](Recursos/images/modeloVenus.png)
+
+#### Planeta Jupiter
+![Jupiter](Recursos/images/modeloJupiter.png)
+
+#### Planeta Mercurio
+![Mercurio](Recursos/images/modeloMercurio.png)
+
+#### Planeta Neptuno
+![Neptuno](Recursos/images/modeloNeptuno.png)
+
+#### Planeta Urano
+![Urano](Recursos/images/modeloUrano.png)
+
+
+
 ### Posibles modelos a usar:
 
 - [Estrellas](https://sketchfab.com/3d-models/need-some-space-d6521362b37b48e3a82bce4911409303)
@@ -34,4 +70,4 @@ Nave
 ### Proyectos similares
 - [Sistema Solar](https://youtu.be/fqXXwvij-Tc?si=zgS2olXHU5tc7oDQ)
 
-https://jaxry.github.io/panorama-to-cubemap/
+
