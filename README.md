@@ -26,6 +26,17 @@
 - **Modelos 3D detallados**: Uso de modelos de alta calidad para representar planetas y la nave.
 - **Interactividad**: Controles de usuario para explorar el entorno.
 
+### ----------------- ###
+<p align="center">
+  <img src="Recursos/images/sistemaCompleto.png" alt="sistema Completo" width="300">
+</p>
+<p align="center">
+  <img src="Recursos/images/interiorNave.png" alt="Interior de la nave" width="300">
+</p>
+
+
+
+
 
 ### Lluvia de ideas
 - Simulador
