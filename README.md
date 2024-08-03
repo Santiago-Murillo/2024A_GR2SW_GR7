@@ -110,6 +110,15 @@
 - [Planeta Tierra](https://sketchfab.com/3d-models/earth-5ce4b1465c83432d9bb7e3c30232c02b)
 - [SciFi Hallway](https://sketchfab.com/3d-models/scifi-hallway-3f57200663904355a21f6ec6cb768594)
 
+### Anexo: coordenadas para colisiones dentro de la nave
+<details>
+  <summary>Ver imagen de coordenadas</summary>
+  
+ ![image](https://github.com/user-attachments/assets/8b451b2c-de1c-4b2e-9bb6-96ef5d6e6671)
+</details>
+
+
+
 ### Proyectos similares
 - [Sistema Solar](https://youtu.be/fqXXwvij-Tc?si=zgS2olXHU5tc7oDQ)
 
