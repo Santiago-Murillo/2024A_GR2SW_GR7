@@ -10,8 +10,12 @@
 
 ## Empresa
   - **Nombre:** SAJE inc.
-  - **Misión:** Desarrollar herramientas y simulaciones interactivas para el aprendizaje y la educación.
-  - **Visión:** Ser líderes en el uso de tecnología gráfica para la educación y el entretenimiento.
+<p align="center">
+  <img src="Recursos/images/logoSaje.png" alt="Logo" width="200">
+</p>
+
+  - **Misión:** Nuestra misión en SAJE.Inc es inspirar y educar a las futuras generaciones a través del desarrollo de programas interactivos en OpenGL, que fomenten la curiosidad y el aprendizaje sobre el universo. Nos dedicamos a crear experiencias educativas únicas y atractivas para niños, facilitando su comprensión y exploración del espacio a través de herramientas tecnológicas avanzadas.
+  - **Visión:** En SAJE.Inc, aspiramos a ser líderes nacionales en la creación de software educativo interactivo, que enriquezca el conocimiento y la imaginación de los niños sobre el cosmos. Visualizamos un mundo donde la tecnología y la educación se unan para despertar el interés científico en los más jóvenes, promoviendo una generación de exploradores y científicos apasionados por el universo.
 
   - **Integrantes:** **S**antiago Murillo, **S**aid Luna, **A**lexander Morales, **J**uan Diego Suarez, **E**liath Velasco
   - **Profesor:** Leonardo Valdivieso
@@ -109,3 +113,6 @@
 
 ### Proyectos similares
 - [Sistema Solar](https://youtu.be/fqXXwvij-Tc?si=zgS2olXHU5tc7oDQ)
+
+## Referencias
+[1] J. de Vries, "Cubemaps," Learn OpenGL, 2021. [Online]. Available: https://learnopengl.com/Advanced-OpenGL/Cubemaps. [Accessed: 03-Aug-2024].
