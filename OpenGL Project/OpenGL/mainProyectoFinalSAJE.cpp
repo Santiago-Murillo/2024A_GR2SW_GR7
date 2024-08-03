@@ -102,12 +102,12 @@ int main()
     // Cargar las texturas del cubemap
     std::vector<std::string> faces
     {
-        "images/right.jpg",
-        "images/left.jpg",
-        "images/top.jpg",
-        "images/bottom.jpg",
-        "images/front.jpg",
-        "images/back.jpg"
+        "images/right3.jpg",
+        "images/left3.jpg",
+        "images/top3.jpg",
+        "images/bottom3.jpg",
+        "images/front3.jpg",
+        "images/back3.jpg"
     };
 
     CubeMap cubeMap(faces);
