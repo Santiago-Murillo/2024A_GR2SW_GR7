@@ -114,7 +114,7 @@ int main()
 
     // build and compile shaders
     // -------------------------
-    Shader modelShader("shaders/shader_ProyectoSAJE.vs", "shaders/shader_ProyectoSAJE.fs");
+    Shader modelShader("shaders/shader_modelo.vs", "shaders/shader_modelo.fs");
 
     // load models
     // -----------
