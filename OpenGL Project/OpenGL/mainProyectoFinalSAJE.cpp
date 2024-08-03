@@ -15,7 +15,7 @@
 #define STB_IMAGE_IMPLEMENTATION 
 #include <learnopengl/stb_image.h>
 
-struct AABB {
+struct AABB { // Estructura AABB para caja de colisiones
     glm::vec3 min;
     glm::vec3 max;
 
@@ -47,12 +47,39 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-// PARED PARA COLISION
-AABB collisionBox(glm::vec3(-2.5f, 3.0f, -35.0f), glm::vec3(2.5f, 6.0f, -33.0f));
+// Coordenadas de paredes de la nave para colisión
+std::vector<AABB> collisionBoxes = {
+    AABB(glm::vec3(-2.5f, 3.0f, -35.0f), glm::vec3(2.5f, 6.0f, -33.0f)),
+    AABB(glm::vec3(2.5f, 3.0f, -35.0f), glm::vec3(4.5f, 6.0f, -13.0f)),
+    AABB(glm::vec3(4.5f, 3.0f, -15.0f), glm::vec3(6.5f, 6.0f, -13.0f)),
+    AABB(glm::vec3(6.5f, 3.0f, -15.0f), glm::vec3(8.5f, 6.0f, -6.5f)),
+    AABB(glm::vec3(4.5f, 3.0f, -8.5f), glm::vec3(6.5f, 6.0f, -6.5f)),
+    AABB(glm::vec3(2.5f, 3.0f, -8.5f), glm::vec3(4.5f, 6.0f, 12.0f)),
+    AABB(glm::vec3(4.5f, 3.0f, 10.0f), glm::vec3(14.0f, 6.0f, 12.0f)),
+    AABB(glm::vec3(14.0f, 3.0f, 10.0f), glm::vec3(16.0f, 6.0f, 19.5f)),
+    AABB(glm::vec3(4.5f, 3.0f, 17.5f), glm::vec3(14.0f, 6.0f, 19.5f)),
+    AABB(glm::vec3(2.5f, 3.0f, 17.5f), glm::vec3(4.5f, 6.0f, 38.5f)),
+    AABB(glm::vec3(-2.5f, 3.0f, 36.5f), glm::vec3(2.5f, 6.0f, 38.5f)),
+    AABB(glm::vec3(-4.5f, 3.0f, 12.5f), glm::vec3(-2.5f, 6.0f, 38.5f)),
+    AABB(glm::vec3(-6.5f, 3.0f, 12.5f), glm::vec3(-4.5f, 6.0f, 14.5f)),
+    AABB(glm::vec3(-8.5f, 3.0f, 6.0f), glm::vec3(-6.5f, 6.0f, 14.5f)),
+    AABB(glm::vec3(-6.5f, 3.0f, 6.0f), glm::vec3(-4.5f, 6.0f, 8.0f)),
+    AABB(glm::vec3(-4.5f, 3.0f, -12.5f), glm::vec3(-2.5f, 6.0f, 8.0f)),
+    AABB(glm::vec3(-14.0f, 3.0f, -12.5f), glm::vec3(-4.5f, 6.0f, -10.5f)),
+    AABB(glm::vec3(-16.0f, 3.0f, -20.0f), glm::vec3(-14.0f, 6.0f, -10.5f)),
+    AABB(glm::vec3(-14.0f, 3.0f, -20.0f), glm::vec3(-4.5f, 6.0f, -18.0f)),
+    AABB(glm::vec3(-4.5f, 3.0f, -35.0f), glm::vec3(-2.5f, 6.0f, -18.0f))
+};
 
+// Método para verificar colisiones.
 bool checkCollision(const glm::vec3& position) {
-    return (position.x >= collisionBox.min.x && position.x <= collisionBox.max.x) &&
-        (position.z >= collisionBox.min.z && position.z <= collisionBox.max.z);
+    for (const auto& box : collisionBoxes) {
+        if ((position.x >= box.min.x && position.x <= box.max.x) &&
+            (position.z >= box.min.z && position.z <= box.max.z)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 unsigned int loadCubemap(std::vector<std::string> faces);
@@ -223,7 +250,7 @@ int main()
         modelShader.setMat4("model", model);
         drone.Draw(modelShader);
        
-        // ------- IMPRIMIR BORDES DE COLISIÓN
+        // ------- IMPRIMIR POSICIÓN ACTUAL DE LA CÁMARA
         std::ostringstream oss;
         oss << "position: " << camera.Position;
         std::cout << oss.str() << std::endl;
