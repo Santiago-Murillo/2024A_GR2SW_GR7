@@ -9,7 +9,6 @@
 </p>
 
 ## Empresa
-  - **Nombre:** SAJE inc.
 <p align="center">
   <img src="Recursos/images/logoSaje.png" alt="Logo" width="200">
 </p>
