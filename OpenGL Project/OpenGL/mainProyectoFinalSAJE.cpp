@@ -8,6 +8,7 @@
 #include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
+#include <learnopengl/CubeMap.h>
 
 #include <iostream>
 
@@ -23,8 +24,8 @@ void processInput(GLFWwindow *window);
 void calculateRainbowColor(float time, float& r, float& g, float& b);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 3.0f, 0.0f));
@@ -47,14 +48,22 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // Remove window decorations34
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
+    // Get primary monitor and its video mode
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+
+    SCR_WIDTH = mode->width;
+    SCR_HEIGHT = mode->height;
+
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Exercise 16 Task 3", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Proyecto Final SAJE", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -68,6 +77,9 @@ int main()
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    // Set window position to cover the entire screen
+    glfwSetWindowPos(window, 0, 0);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -84,62 +96,8 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // Configuraci�n de los v�rtices del cubemap
-    float skyboxVertices[] = {
-        // posiciones            
-        -1.0f,  1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-        -1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f
-    };
-
-    // Configuraci�n del VAO y VBO para el cubemap
-    unsigned int skyboxVAO, skyboxVBO;
-    glGenVertexArrays(1, &skyboxVAO);
-    glGenBuffers(1, &skyboxVBO);
-    glBindVertexArray(skyboxVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glBindVertexArray(0);
+    // Configuraci�n de shaders
+    Shader skyboxShader("shaders/shader_skybox.vs", "shaders/shader_skybox.fs");
 
     // Cargar las texturas del cubemap
     std::vector<std::string> faces
@@ -151,16 +109,12 @@ int main()
         "images/front.jpg",
         "images/back.jpg"
     };
-    unsigned int cubemapTexture = loadCubemap(faces);
 
-    // Configuraci�n de shaders
-    Shader skyboxShader("shaders/shader_skybox.vs", "shaders/shader_skybox.fs");
-
-
+    CubeMap cubeMap(faces);
 
     // build and compile shaders
     // -------------------------
-    Shader ourShader("shaders/shader_ProyectoSAJE.vs", "shaders/shader_ProyectoSAJE.fs");
+    Shader modelShader("shaders/shader_ProyectoSAJE.vs", "shaders/shader_ProyectoSAJE.fs");
 
     // load models
     // -----------
@@ -189,52 +143,32 @@ int main()
 
         // Clear color and depth buffer
         float timeValue = glfwGetTime();
-        //float red, green, blue;
-        //calculateRainbowColor(timeValue, red, green, blue);
-
-        //float red, green, blue;
-        //calculateRainbowColor(timeValue, red, green, blue);
-        //glClearColor(red, green, blue, 1.0f);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Renderizado del cubemap
-        // -----------------------
-        glDepthFunc(GL_LEQUAL); // Usar GL_LEQUAL para que el cubemap se renderice correctamente en el fondo
-        skyboxShader.use();
-
-        // Crear matrices para el cubemap
+        // Render cubemap
         glm::mat4 viewSkybox = glm::mat4(glm::mat3(camera.GetViewMatrix())); // Eliminar la traslaci�n
         glm::mat4 projectionSkybox = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        cubeMap.render(skyboxShader, viewSkybox, projectionSkybox);
 
-        skyboxShader.setMat4("view", viewSkybox);
-        skyboxShader.setMat4("projection", projectionSkybox);
-
-        glBindVertexArray(skyboxVAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-
-        glDepthFunc(GL_LESS); // Volver a la configuraci�n normal para otros objetos
 
         // Renderizar el modelo
         // ---------------------
-        ourShader.use();
+        modelShader.use();
 
         // Crear matrices para el modelo
-        glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 300.0f);
         glm::mat4 viewModel = camera.GetViewMatrix();
 
-        ourShader.setMat4("projection", projectionModel);
-        ourShader.setMat4("view", viewModel);
+        modelShader.setMat4("projection", projectionModel);
+        modelShader.setMat4("view", viewModel);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-        ourShader.setMat4("model", model);
-        scifi_hallway.Draw(ourShader);
+        modelShader.setMat4("model", model);
+        scifi_hallway.Draw(modelShader);
 
 
         // render far scifi_hallway
@@ -242,8 +176,8 @@ int main()
         model = glm::translate(model, glm::vec3(150.0f, 30.0f, -150.0f));
         model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-        ourShader.setMat4("model", model);
-        scifi_hallway.Draw(ourShader);
+        modelShader.setMat4("model", model);
+        scifi_hallway.Draw(modelShader);
 
         // render drone
         // Forma medio trucada para rotar en base a un eje, funciona raro, se recomienda buscar otra foma
@@ -263,8 +197,8 @@ int main()
         model = glm::translate(model, glm::vec3(radioDron, 0.0f, 0.0f));
 
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-        ourShader.setMat4("model", model);
-        drone.Draw(ourShader);
+        modelShader.setMat4("model", model);
+        drone.Draw(modelShader);
        
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
