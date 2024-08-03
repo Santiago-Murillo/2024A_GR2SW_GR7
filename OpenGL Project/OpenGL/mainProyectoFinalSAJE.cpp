@@ -123,6 +123,12 @@ int main()
     Model sol("model/sol/Sol.obj");
     Model mercurio("model/mercurio/mercurio.obj");
     Model venus("model/venus/venus.obj");
+    Model tierra("model/tierra/tierra.obj");
+    Model marte("model/marte/marte.obj");
+    Model jupiter("model/jupiter/jupiter.obj");
+    Model saturn("model/saturn/saturno.obj");
+    Model urano("model/urano/urano.obj");
+    Model neptuno("model/neptuno/neptuno.obj");
     
     
     // draw in wireframe
@@ -189,24 +195,66 @@ int main()
 
         // render Sol
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(3500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
-        model = glm::scale(model, glm::vec3(50.0f, 50.0f, 50.0f)); // Ajustar la escala del Sol
+        model = glm::translate(model, glm::vec3(3600.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(52.0f, 52.0f, 52.0f)); // Ajustar la escala del Sol
         modelShader.setMat4("model", model);
         sol.Draw(modelShader);
 
         //render de mercurio 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 2000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala del Sol
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala de mercurio
         modelShader.setMat4("model", model);
         mercurio.Draw(modelShader);
 
         //render de venus 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(3500.0f + 3000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
-        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f)); // Ajustar la escala del Sol
+        model = glm::translate(model, glm::vec3(3500.0f + 2500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f)); // Ajustar la escala de venus
         modelShader.setMat4("model", model);
         venus.Draw(modelShader);
+
+        //render de la tierra
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 3000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(70.2f, 70.2f, 70.2f)); // Ajustar la escala de la tierra
+        modelShader.setMat4("model", model);
+        tierra.Draw(modelShader);
+
+        //render de marte
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 3500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(7.5f, 7.5f, 7.5f)); // Ajustar la escala de marte
+        modelShader.setMat4("model", model);
+        marte.Draw(modelShader);
+
+        //render de jupiter
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 5000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(150.5f, 150.5f, 150.5f)); // Ajustar la escala de jupiter
+        modelShader.setMat4("model", model);
+        jupiter.Draw(modelShader);
+
+        //render de saturno
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 7000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(650.0f, 650.0f, 650.0f)); // Ajustar la escala de saturno
+        modelShader.setMat4("model", model);
+        saturn.Draw(modelShader);
+
+        //render de urano
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 8500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(0.43f, 0.43f, 0.43f)); // Ajustar la escala de urano
+        modelShader.setMat4("model", model);
+        urano.Draw(modelShader);
+
+        //render de neptuno
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 9500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala de neptuno
+        modelShader.setMat4("model", model);
+        neptuno.Draw(modelShader);
 
         // render far scifi_hallway
         model = glm::mat4(1.0f);
