@@ -148,6 +148,11 @@ int main()
 
         // Render cubemap
         glm::mat4 viewSkybox = glm::mat4(glm::mat3(camera.GetViewMatrix())); // Eliminar la traslaci�n
+
+        // Calculate the rotation angle
+        float angle = currentFrame * glm::radians(0.5f); // Rotate x degrees per second
+        viewSkybox = glm::rotate(viewSkybox, angle, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around the Y axis
+
         glm::mat4 projectionSkybox = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         cubeMap.render(skyboxShader, viewSkybox, projectionSkybox);
 
@@ -196,7 +201,7 @@ int main()
         // Trasladar el modelo al radio deseado desde el centro de rotaci�n
         model = glm::translate(model, glm::vec3(radioDron, 0.0f, 0.0f));
 
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        model = glm::scale(model, glm::vec3(-0.5f, 0.5f, 0.5f));
         modelShader.setMat4("model", model);
         drone.Draw(modelShader);
        
