@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <string> 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,12 +15,22 @@
 #define STB_IMAGE_IMPLEMENTATION 
 #include <learnopengl/stb_image.h>
 
+struct AABB {
+    glm::vec3 min;
+    glm::vec3 max;
+
+    AABB(glm::vec3 min, glm::vec3 max) : min(min), max(max) {}
+};
+
+std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
+    os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+    return os;
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
-
+void processInput(GLFWwindow* window);
 void calculateRainbowColor(float time, float& r, float& g, float& b);
 
 // settings
@@ -37,6 +47,13 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// PARED PARA COLISION
+AABB collisionBox(glm::vec3(-2.5f, 3.0f, -35.0f), glm::vec3(2.5f, 6.0f, -33.0f));
+
+bool checkCollision(const glm::vec3& position) {
+    return (position.x >= collisionBox.min.x && position.x <= collisionBox.max.x) &&
+        (position.z >= collisionBox.min.z && position.z <= collisionBox.max.z);
+}
 
 unsigned int loadCubemap(std::vector<std::string> faces);
 
@@ -126,13 +143,14 @@ int main()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     camera.MovementSpeed = 10; //Optional. Modify the speed of the camera
-
+    
+   
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
-     // --------------------
+        // --------------------
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -205,6 +223,10 @@ int main()
         modelShader.setMat4("model", model);
         drone.Draw(modelShader);
        
+        // ------- IMPRIMIR BORDES DE COLISIÓN
+        std::ostringstream oss;
+        oss << "position: " << camera.Position;
+        std::cout << oss.str() << std::endl;
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -220,11 +242,11 @@ int main()
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
+    glm::vec3 prevPosition = camera.Position;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -244,8 +266,16 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         camera.ProcessKeyboard(WALK, deltaTime);
 
-    //camera.Position.y = 3.0f;
+    if (checkCollision(camera.Position)) {
+        // Limitar la posición de la cámara a los límites de la caja de colisión
+        std::cout << "------- COLISION DETECTADA -------" << std::endl;
+        camera.Position = prevPosition;
+    
+    }
+
+    camera.Position.y = 3.0f;
 }
+
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -282,6 +312,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
 }
+
 
 void calculateRainbowColor(float time, float& r, float& g, float& b) {
     float frequency = 1.0f; // Ajusta la frecuencia para controlar la velocidad del cambio de color

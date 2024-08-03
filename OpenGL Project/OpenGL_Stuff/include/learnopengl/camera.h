@@ -78,19 +78,16 @@ public:
         float velocity = MovementSpeed * deltaTime * speedModifier;
         if (action == FORWARD)
             Position += Front * velocity;
-        
         if (action == BACKWARD)
             Position -= Front * velocity;
         if (action == LEFT)
             Position -= Right * velocity;
         if (action == RIGHT)
             Position += Right * velocity;
-
         if (action == UP)
             Position += WorldUp * velocity;
         if (action == DOWN)
             Position -= WorldUp * velocity;
-
         if (action == RUN)
             speedModifier = 2;
         if (action == WALK)
