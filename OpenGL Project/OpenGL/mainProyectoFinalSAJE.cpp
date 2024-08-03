@@ -122,6 +122,7 @@ int main()
     Model drone("model/drone/drone.obj");
     Model sol("model/sol/Sol.obj");
     Model mercurio("model/mercurio/mercurio.obj");
+    Model venus("model/venus/venus.obj");
     
     
     // draw in wireframe
@@ -193,12 +194,19 @@ int main()
         modelShader.setMat4("model", model);
         sol.Draw(modelShader);
 
-        //render del mercurio 
+        //render de mercurio 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 2000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala del Sol
         modelShader.setMat4("model", model);
         mercurio.Draw(modelShader);
+
+        //render de venus 
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 3000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f)); // Ajustar la escala del Sol
+        modelShader.setMat4("model", model);
+        venus.Draw(modelShader);
 
         // render far scifi_hallway
         model = glm::mat4(1.0f);
