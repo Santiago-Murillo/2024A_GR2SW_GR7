@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Recursos/images/EpnLogo.png" alt="Logo Universidad" width="200">
+  <img src="Recursos/images/EpnLogo.jpg" alt="Logo Universidad" width="200">
 </p>
 
 <h1 align="center">2024A_GR2SW_GRx: ProyectoCGrafica2024A</h1>
