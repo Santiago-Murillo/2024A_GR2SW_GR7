@@ -1,16 +1,19 @@
 <p align="center">
-  <img src="Recursos/images/EpnLogo.jpg" alt="Logo Universidad" width="200">
+  <img src="Recursos/images/logo_universidad.png" alt="Logo Universidad" width="200">
 </p>
 
-# 2024A_GR2SW_GRx: ProyectoCGrafica2024A
-Producto como proyecto final de Computacion Grafica de Ingeniería de Software, Escuela Politécnica Nacional.
+<h1 align="center">2024A_GR2SW_GRx: ProyectoCGrafica2024A</h1>
+
+<p align="center">
+  Producto como proyecto final de Computación Gráfica de Ingeniería de Software, Escuela Politécnica Nacional.
+</p>
 
 ## Empresa
   - **Nombre:** SAJE inc.
-  - **Mision:**
+  - **Misión:**
   - **Visión:**
 
-  - **Intergrantes:** **S**antiago Murillo, **S**aid Luna, **A**lexander Morales, **J**uan Diego Suarez, **E**liath Velasco
+  - **Integrantes:** **S**antiago Murillo, **S**aid Luna, **A**lexander Morales, **J**uan Diego Suarez, **E**liath Velasco
   - **Profesor:** Leonardo Valdivieso
 
 ## Idea
@@ -18,48 +21,26 @@ Producto como proyecto final de Computacion Grafica de Ingeniería de Software, 
 "Viajando por el espacio"
 
 ### Lluvia de ideas
-Simulador
-Sistema solar
-Universo
-Nave
+- Simulador
+- Sistema solar
+- Universo
+- Nave
 
 ### Modelos utilizados en el programa
 
-
-#### SciFi Hallway
-![SciFi Hallway](Recursos/images/modeloNave.png)
-
-#### Drone
-![Drone](Recursos/images/modeloDrone.png)
-
-#### Sol
-![Sol](Recursos/images/modeloSol.png)
-
-#### Planeta Tierra
-![Tierra](Recursos/images/modeloTierra.png)
-
-#### Planeta Saturno
-![Saturno](Recursos/images/modeloSaturno.png)
-
-#### Planeta Marte
-![Marte](Recursos/images/modeloMarte.png)
-
-#### Planeta Venus
-![Venus](Recursos/images/modeloVenus.png)
-
-#### Planeta Jupiter
-![Jupiter](Recursos/images/modeloJupiter.png)
-
-#### Planeta Mercurio
-![Mercurio](Recursos/images/modeloMercurio.png)
-
-#### Planeta Neptuno
-![Neptuno](Recursos/images/modeloNeptuno.png)
-
-#### Planeta Urano
-![Urano](Recursos/images/modeloUrano.png)
-
-
+<div align="center">
+  <img src="Recursos/images/modeloNave.png" alt="SciFi Hallway" width="300">
+  <img src="Recursos/images/modeloDrone.png" alt="Drone" width="300">
+  <img src="Recursos/images/modeloSol.png" alt="Sol" width="300">
+  <img src="Recursos/images/modeloTierra.png" alt="Planeta Tierra" width="300">
+  <img src="Recursos/images/modeloSaturno.png" alt="Planeta Saturno" width="300">
+  <img src="Recursos/images/modeloMarte.png" alt="Planeta Marte" width="300">
+  <img src="Recursos/images/modeloVenus.png" alt="Planeta Venus" width="300">
+  <img src="Recursos/images/modeloJupiter.png" alt="Planeta Jupiter" width="300">
+  <img src="Recursos/images/modeloMercurio.png" alt="Planeta Mercurio" width="300">
+  <img src="Recursos/images/modeloNeptuno.png" alt="Planeta Neptuno" width="300">
+  <img src="Recursos/images/modeloUrano.png" alt="Planeta Urano" width="300">
+</div>
 
 ### Posibles modelos a usar:
 
@@ -69,5 +50,3 @@ Nave
 
 ### Proyectos similares
 - [Sistema Solar](https://youtu.be/fqXXwvij-Tc?si=zgS2olXHU5tc7oDQ)
-
-
