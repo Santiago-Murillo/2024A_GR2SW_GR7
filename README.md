@@ -19,6 +19,12 @@ Sistema solar
 Universo
 Nave
 
+### Modelos utilizados en el programa
+
+
+#### SciFi Hallway
+![SciFi Hallway](Recursos/images/modeloNave.png)
+
 ### Posibles modelos a usar:
 
 - [Estrellas](https://sketchfab.com/3d-models/need-some-space-d6521362b37b48e3a82bce4911409303)
