@@ -1,0 +1,13 @@
+# Blender 4.2.0 MTL File: 'None'
+# www.blender.org
+
+newmtl 01_-_Default
+Ns 41.182388
+Ka 0.099276 0.099276 0.099276
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd 01_-_Default_baseColor.jpeg
+map_Bump -bm 1.000000 01_-_Default_normal.png
