@@ -10,8 +10,8 @@
 
 ## Empresa
   - **Nombre:** SAJE inc.
-  - **Misión:**
-  - **Visión:**
+  - **Misión:** Desarrollar herramientas y simulaciones interactivas para el aprendizaje y la educación.
+  - **Visión:** Ser líderes en el uso de tecnología gráfica para la educación y el entretenimiento.
 
   - **Integrantes:** **S**antiago Murillo, **S**aid Luna, **A**lexander Morales, **J**uan Diego Suarez, **E**liath Velasco
   - **Profesor:** Leonardo Valdivieso
@@ -19,6 +19,13 @@
 ## Idea
 
 "Viajando por el espacio"
+
+## Características
+
+- **Simulación del sistema solar**: Incluye modelos de planetas y otros cuerpos celestes.
+- **Modelos 3D detallados**: Uso de modelos de alta calidad para representar planetas y la nave.
+- **Interactividad**: Controles de usuario para explorar el entorno.
+
 
 ### Lluvia de ideas
 - Simulador
