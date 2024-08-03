@@ -120,12 +120,13 @@ int main()
     // -----------
     Model scifi_hallway("model/scifi_hallway/scifi_hallway.obj");
     Model drone("model/drone/drone.obj");
+    Model sol("model/sol/Sol.obj");
     
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    camera.MovementSpeed = 10; //Optional. Modify the speed of the camera
+    camera.MovementSpeed = 1500; //Optional. Modify the speed of the camera
 
     // render loop
     // -----------
@@ -153,7 +154,15 @@ int main()
         float angle = currentFrame * glm::radians(0.5f); // Rotate x degrees per second
         viewSkybox = glm::rotate(viewSkybox, angle, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around the Y axis
 
-        glm::mat4 projectionSkybox = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        /// Escalar el cubemap
+        glm::mat4 modelSkybox = glm::mat4(1.0f);
+        modelSkybox = glm::scale(modelSkybox, glm::vec3(1000000.0f, 1000000.0f, 1000000.0f)); // Ajustar la escala del cubemap
+
+        glm::mat4 projectionSkybox = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000000.0f);
+        skyboxShader.use();
+        skyboxShader.setMat4("model", modelSkybox); // Enviar la matriz de modelo al shader
+        skyboxShader.setMat4("view", viewSkybox);
+        skyboxShader.setMat4("projection", projectionSkybox);
         cubeMap.render(skyboxShader, viewSkybox, projectionSkybox);
 
 
@@ -162,11 +171,12 @@ int main()
         modelShader.use();
 
         // Crear matrices para el modelo
-        glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 300.0f);
+        glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000000.0f);
         glm::mat4 viewModel = camera.GetViewMatrix();
 
         modelShader.setMat4("projection", projectionModel);
         modelShader.setMat4("view", viewModel);
+
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
@@ -174,6 +184,13 @@ int main()
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         modelShader.setMat4("model", model);
         scifi_hallway.Draw(modelShader);
+
+        // render Sol
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(50.0f, 50.0f, 50.0f)); // Ajustar la escala del Sol
+        modelShader.setMat4("model", model);
+        sol.Draw(modelShader);
 
 
         // render far scifi_hallway
