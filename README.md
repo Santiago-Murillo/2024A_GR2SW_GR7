@@ -28,19 +28,60 @@
 
 ### Modelos utilizados en el programa
 
-<div align="center">
+<h3 align="center">SciFi Hallway</h3>
+<p align="center">
   <img src="Recursos/images/modeloNave.png" alt="SciFi Hallway" width="300">
+</p>
+
+<h3 align="center">Drone</h3>
+<p align="center">
   <img src="Recursos/images/modeloDrone.png" alt="Drone" width="300">
+</p>
+
+<h3 align="center">Sol</h3>
+<p align="center">
   <img src="Recursos/images/modeloSol.png" alt="Sol" width="300">
+</p>
+
+<h3 align="center">Planeta Tierra</h3>
+<p align="center">
   <img src="Recursos/images/modeloTierra.png" alt="Planeta Tierra" width="300">
+</p>
+
+<h3 align="center">Planeta Saturno</h3>
+<p align="center">
   <img src="Recursos/images/modeloSaturno.png" alt="Planeta Saturno" width="300">
+</p>
+
+<h3 align="center">Planeta Marte</h3>
+<p align="center">
   <img src="Recursos/images/modeloMarte.png" alt="Planeta Marte" width="300">
+</p>
+
+<h3 align="center">Planeta Venus</h3>
+<p align="center">
   <img src="Recursos/images/modeloVenus.png" alt="Planeta Venus" width="300">
+</p>
+
+<h3 align="center">Planeta Jupiter</h3>
+<p align="center">
   <img src="Recursos/images/modeloJupiter.png" alt="Planeta Jupiter" width="300">
+</p>
+
+<h3 align="center">Planeta Mercurio</h3>
+<p align="center">
   <img src="Recursos/images/modeloMercurio.png" alt="Planeta Mercurio" width="300">
+</p>
+
+<h3 align="center">Planeta Neptuno</h3>
+<p align="center">
   <img src="Recursos/images/modeloNeptuno.png" alt="Planeta Neptuno" width="300">
+</p>
+
+<h3 align="center">Planeta Urano</h3>
+<p align="center">
   <img src="Recursos/images/modeloUrano.png" alt="Planeta Urano" width="300">
-</div>
+</p>
 
 ### Posibles modelos a usar:
 
