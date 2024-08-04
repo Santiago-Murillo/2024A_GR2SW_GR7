@@ -472,14 +472,14 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
     {
         // mover al sol
-        camera.Position = glm::vec3(3492.24f, 2982.53f, -6432.11f);
+        camera.Position = glm::vec3(-700.055f, 2826.62f, -4660.98f);
         camera.MovementSpeed = 1000.0f;
     }
     // 2
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
     {
         // mover a mercurio
-        camera.Position = glm::vec3(3400.0f + 2000.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(8478.86f, 2992.59f, -3040.43f);
         camera.MovementSpeed = 1000.0f;
     }
 
@@ -487,7 +487,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
     {
         // mover a venus
-        camera.Position = glm::vec3(3400.0f + 2500.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(13484.5f, 3010.7f, -3063.85f);
         camera.MovementSpeed = 1000.0f;
     }
 
@@ -495,7 +495,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
     {
         // mover a tierra
-        camera.Position = glm::vec3(3400.0f + 3000.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(23455.5f, 3003.19f, -2994.04f);
         camera.MovementSpeed = 1000.0f;
     }
 
@@ -503,7 +503,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
     {
         // mover a marte
-        camera.Position = glm::vec3(3400.0f + 3500.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(33489.2f, 3009.61f, -3026.56f);
         camera.MovementSpeed = 1000.0f;
     }
 
@@ -511,7 +511,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
     {
         // mover a jupiter
-        camera.Position = glm::vec3(3400.0f + 5000.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(43380.6f, 3049.45f, -3395.93f);
         camera.MovementSpeed = 1000.0f;
     }
 
@@ -519,7 +519,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
     {
         // mover a saturno
-        camera.Position = glm::vec3(3400.0f + 7000.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(52656.1f, 3117.08f, -2911.97f);
         camera.MovementSpeed = 1000.0f;
     }
 
@@ -527,7 +527,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
     {
         // mover a urano
-        camera.Position = glm::vec3(3400.0f + 8500.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(63101.7f, 2967.07f, -2832.81f);
         camera.MovementSpeed = 1000.0f;
     }
 
@@ -535,14 +535,14 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
     {
         // Mover a neptuno
-        camera.Position = glm::vec3(3400.0f + 9500.0f, 3000.0f, -3000.0f);
+        camera.Position = glm::vec3(83689.2f, 3034.89f, -2672.7f);
         camera.MovementSpeed = 1000.0f;
     }
     // 0
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
     {
 		// mover a nave
-		camera.Position = glm::vec3(-2.0f, 0.0f, 0.0f);
+		camera.Position = glm::vec3(-0.651043f, 3.10671f, 1.98734f);
         camera.MovementSpeed = 10.0f;
 	}
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
