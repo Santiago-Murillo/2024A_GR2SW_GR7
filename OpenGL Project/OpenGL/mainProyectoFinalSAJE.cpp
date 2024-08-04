@@ -30,8 +30,11 @@ std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
-void calculateRainbowColor(float time, float& r, float& g, float& b);
+
+void processInput(GLFWwindow *window);
+
+//void calculateRainbowColor(float time, float& r, float& g, float& b);
+
 
 // settings
 unsigned int SCR_WIDTH = 800;
@@ -46,6 +49,9 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+bool flashlightTurnedOn = true;
+bool FClicked = false;
 
 // Coordenadas de paredes de la nave para colisión
 std::vector<AABB> collisionBoxes = {
@@ -139,12 +145,11 @@ int main()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
-
-    // Configuraci�n de shaders
-    Shader skyboxShader("shaders/shader_skybox.vs", "shaders/shader_skybox.fs");
+    // Corregir gamma (se vuelve mas brillante)
+    //glEnable(GL_FRAMEBUFFER_SRGB);
 
     // Cargar las texturas del cubemap
-    std::vector<std::string> faces
+    std::vector<std::string> cubeMapFaces
     {
         "images/right3.jpg",
         "images/left3.jpg",
@@ -153,12 +158,20 @@ int main()
         "images/front3.jpg",
         "images/back3.jpg"
     };
-
-    CubeMap cubeMap(faces);
+    CubeMap cubeMap(cubeMapFaces);
 
     // build and compile shaders
     // -------------------------
-    Shader modelShader("shaders/shader_ProyectoSAJE.vs", "shaders/shader_ProyectoSAJE.fs");
+    Shader modelShader("shaders/shader_modelo.vs", "shaders/shader_modelo.fs");
+    Shader skyboxShader("shaders/shader_skybox.vs", "shaders/shader_skybox.fs");
+    Shader lightShader("shaders/shader_emisorLuz.vs", "shaders/shader_emisorLuz.fs");
+
+    glm::vec3 pointLightPositions[] = {
+        glm::vec3( 0.0f,  4.0f,  -3.0f),
+        glm::vec3( 2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f,  2.0f, -12.0f),
+        glm::vec3( 0.0f,  0.0f, -3.0f)
+    };
 
     // load models
     // -----------
@@ -173,7 +186,12 @@ int main()
     Model saturn("model/saturn/saturno.obj");
     Model urano("model/urano/urano.obj");
     Model neptuno("model/neptuno/neptuno.obj");
-    
+  
+    modelShader.use(); 
+    modelShader.setInt("material.diffuse", 0);
+    modelShader.setInt("material.specular", 1);
+    modelShader.setInt("material.emission", 3);
+  
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -216,12 +234,60 @@ int main()
         skyboxShader.setMat4("projection", projectionSkybox);
         cubeMap.render(skyboxShader, viewSkybox, projectionSkybox);
 
+        // Renderizar point lights
+        lightShader.use();
 
-        // Renderizar el modelo
+
+// Renderizar los modelos
         // ---------------------
         modelShader.use();
+    // Configurar luces
+        modelShader.setVec3("viewPos", camera.Position);
+        modelShader.setFloat("material.shininess", 32.0f);
 
-        // Crear matrices para el modelo
+        //// directional light
+        //modelShader.setVec3("dirLight.direction", -0.2f, 1.0f, 1.0f);
+        //modelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        //modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        //modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+
+        // point light 1
+        modelShader.setVec3("pointLights[0].position", pointLightPositions[0]);
+        modelShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+        modelShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+        
+        // modelShader.setFloat("pointLights[0].constant", 1.0f);
+        // modelShader.setFloat("pointLights[0].linear", 0.22);
+        // modelShader.setFloat("pointLights[0].quadratic", 0.20);
+        modelShader.setFloat("pointLights[0].constant", 1.0f);
+        modelShader.setFloat("pointLights[0].linear", 0.09);
+        modelShader.setFloat("pointLights[0].quadratic", 0.032);
+
+        // flashlight (spotlight)
+        modelShader.setVec3("spotLight.position", camera.Position);
+        modelShader.setVec3("spotLight.direction", camera.Front);
+
+        if (flashlightTurnedOn)
+        {
+            modelShader.setVec3("spotLight.ambient", 1.0f, 1.0f, 1.0f);
+            modelShader.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+            modelShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        }
+        else
+        {
+            modelShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+            modelShader.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+            modelShader.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
+        }
+
+        modelShader.setFloat("spotLight.constant", 1.0f);
+        modelShader.setFloat("spotLight.linear", 0.09);
+        modelShader.setFloat("spotLight.quadratic", 0.032);
+        modelShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        modelShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+      
+    // Configurar matrices
         glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000000.0f);
         glm::mat4 viewModel = camera.GetViewMatrix();
 
@@ -229,6 +295,7 @@ int main()
         modelShader.setMat4("view", viewModel);
 
 
+        // render scifi_hallway
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -299,20 +366,19 @@ int main()
         modelShader.setMat4("model", model);
         neptuno.Draw(modelShader);
 
-        // render far scifi_hallway
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(150.0f, 30.0f, -150.0f));
-        model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-        modelShader.setMat4("model", model);
-        scifi_hallway.Draw(modelShader);
+        //// render far scifi_hallway
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(150.0f, 30.0f, -150.0f));
+        //model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        //model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        //modelShader.setMat4("model", model);
+        //scifi_hallway.Draw(modelShader);
+
 
         // render drone
-        // Forma medio trucada para rotar en base a un eje, funciona raro, se recomienda buscar otra foma
+            // Forma medio trucada para rotar en base a un eje, funciona raro, se recomienda buscar otra foma:
         float radioDron = 25.0f;
-        // Eje de rotaci�n arbitrario
         glm::vec3 axis(0.0f, 0.0f, 1.0f); // Ajusta este vector seg�n sea necesario
-        // Centro de rotaci�n
         glm::vec3 center(-7.0f, 0.0f, 0.0f); // Ajusta el centro seg�n sea necesario
         axis = glm::normalize(axis);
 
@@ -371,6 +437,24 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         camera.ProcessKeyboard(WALK, deltaTime);
 
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+    {
+    // Desconmentando esto y comendanto lo otro se arregla el bug de la linterna pero queda interesante xd
+        //if (!FClicked)
+        //{
+        //    FClicked = true; // Marcar que se ha hecho clic
+        //    flashlightTurnedOn = !flashlightTurnedOn; // Cambiar el estado de la linterna
+        //}
+        FClicked = true; // Marcar que se ha hecho clic
+        flashlightTurnedOn = !flashlightTurnedOn; // Cambiar el estado de la linterna
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE)
+    {
+        FClicked = false; // Reiniciar la variable cuando se suelte el bot?n del mouse
+    }
+    //camera.Position.y = 3.0f;
+
     if (checkCollision(camera.Position)) {
         // Limitar la posición de la cámara a los límites de la caja de colisión
         std::cout << "------- COLISION DETECTADA -------" << std::endl;
@@ -418,22 +502,21 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.ProcessMouseScroll(yoffset);
 }
 
+// void calculateRainbowColor(float time, float& r, float& g, float& b) {
+//     float frequency = 1.0f; // Ajusta la frecuencia para controlar la velocidad del cambio de color
+//     float phase = time * frequency;
 
-void calculateRainbowColor(float time, float& r, float& g, float& b) {
-    float frequency = 1.0f; // Ajusta la frecuencia para controlar la velocidad del cambio de color
-    float phase = time * frequency;
+//     // Sinusoides para los colores base del arco�ris
+//     r = std::sin(phase + 0.0f) * 0.5f + 0.5f;
+//     g = std::sin(phase + 2.0f) * 0.5f + 0.5f;
+//     b = std::sin(phase + 4.0f) * 0.5f + 0.5f;
 
-    // Sinusoides para los colores base del arco�ris
-    r = std::sin(phase + 0.0f) * 0.5f + 0.5f;
-    g = std::sin(phase + 2.0f) * 0.5f + 0.5f;
-    b = std::sin(phase + 4.0f) * 0.5f + 0.5f;
-
-    // Variar la intensidad para pasar por negro y blanco
-    float intensity = std::sin(phase * 1.0f) * 0.5f + 0.5f;
-    r *= intensity;
-    g *= intensity;
-    b *= intensity;
-}
+//     // Variar la intensidad para pasar por negro y blanco
+//     float intensity = std::sin(phase * 1.0f) * 0.5f + 0.5f;
+//     r *= intensity;
+//     g *= intensity;
+//     b *= intensity;
+// }
 
 unsigned int loadCubemap(std::vector<std::string> faces)
 {
