@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <string> 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,13 +15,26 @@
 #define STB_IMAGE_IMPLEMENTATION 
 #include <learnopengl/stb_image.h>
 
+struct AABB { // Estructura AABB para caja de colisiones
+    glm::vec3 min;
+    glm::vec3 max;
+
+    AABB(glm::vec3 min, glm::vec3 max) : min(min), max(max) {}
+};
+
+std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
+    os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+    return os;
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
 void processInput(GLFWwindow *window);
 
 //void calculateRainbowColor(float time, float& r, float& g, float& b);
+
 
 // settings
 unsigned int SCR_WIDTH = 800;
@@ -40,6 +53,40 @@ float lastFrame = 0.0f;
 bool flashlightTurnedOn = true;
 bool FClicked = false;
 
+// Coordenadas de paredes de la nave para colisión
+std::vector<AABB> collisionBoxes = {
+    AABB(glm::vec3(-2.5f, 3.0f, -35.0f), glm::vec3(2.5f, 6.0f, -33.0f)),
+    AABB(glm::vec3(2.5f, 3.0f, -35.0f), glm::vec3(4.5f, 6.0f, -13.0f)),
+    AABB(glm::vec3(4.5f, 3.0f, -15.0f), glm::vec3(6.5f, 6.0f, -13.0f)),
+    AABB(glm::vec3(6.5f, 3.0f, -15.0f), glm::vec3(8.5f, 6.0f, -6.5f)),
+    AABB(glm::vec3(4.5f, 3.0f, -8.5f), glm::vec3(6.5f, 6.0f, -6.5f)),
+    AABB(glm::vec3(2.5f, 3.0f, -8.5f), glm::vec3(4.5f, 6.0f, 12.0f)),
+    AABB(glm::vec3(4.5f, 3.0f, 10.0f), glm::vec3(14.0f, 6.0f, 12.0f)),
+    AABB(glm::vec3(14.0f, 3.0f, 10.0f), glm::vec3(16.0f, 6.0f, 19.5f)),
+    AABB(glm::vec3(4.5f, 3.0f, 17.5f), glm::vec3(14.0f, 6.0f, 19.5f)),
+    AABB(glm::vec3(2.5f, 3.0f, 17.5f), glm::vec3(4.5f, 6.0f, 38.5f)),
+    AABB(glm::vec3(-2.5f, 3.0f, 36.5f), glm::vec3(2.5f, 6.0f, 38.5f)),
+    AABB(glm::vec3(-4.5f, 3.0f, 12.5f), glm::vec3(-2.5f, 6.0f, 38.5f)),
+    AABB(glm::vec3(-6.5f, 3.0f, 12.5f), glm::vec3(-4.5f, 6.0f, 14.5f)),
+    AABB(glm::vec3(-8.5f, 3.0f, 6.0f), glm::vec3(-6.5f, 6.0f, 14.5f)),
+    AABB(glm::vec3(-6.5f, 3.0f, 6.0f), glm::vec3(-4.5f, 6.0f, 8.0f)),
+    AABB(glm::vec3(-4.5f, 3.0f, -12.5f), glm::vec3(-2.5f, 6.0f, 8.0f)),
+    AABB(glm::vec3(-14.0f, 3.0f, -12.5f), glm::vec3(-4.5f, 6.0f, -10.5f)),
+    AABB(glm::vec3(-16.0f, 3.0f, -20.0f), glm::vec3(-14.0f, 6.0f, -10.5f)),
+    AABB(glm::vec3(-14.0f, 3.0f, -20.0f), glm::vec3(-4.5f, 6.0f, -18.0f)),
+    AABB(glm::vec3(-4.5f, 3.0f, -35.0f), glm::vec3(-2.5f, 6.0f, -18.0f))
+};
+
+// Método para verificar colisiones.
+bool checkCollision(const glm::vec3& position) {
+    for (const auto& box : collisionBoxes) {
+        if ((position.x >= box.min.x && position.x <= box.max.x) &&
+            (position.z >= box.min.z && position.z <= box.max.z)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 unsigned int loadCubemap(std::vector<std::string> faces);
 
@@ -104,12 +151,12 @@ int main()
     // Cargar las texturas del cubemap
     std::vector<std::string> cubeMapFaces
     {
-        "images/right.jpg",
-        "images/left.jpg",
-        "images/top.jpg",
-        "images/bottom.jpg",
-        "images/front.jpg",
-        "images/back.jpg"
+        "images/right3.jpg",
+        "images/left3.jpg",
+        "images/top3.jpg",
+        "images/bottom3.jpg",
+        "images/front3.jpg",
+        "images/back3.jpg"
     };
     CubeMap cubeMap(cubeMapFaces);
 
@@ -130,23 +177,32 @@ int main()
     // -----------
     Model scifi_hallway("model/scifi_hallway/scifi_hallway.obj");
     Model drone("model/drone/drone.obj");
-
+    Model sol("model/sol/Sol.obj");
+    Model mercurio("model/mercurio/mercurio.obj");
+    Model venus("model/venus/venus.obj");
+    Model tierra("model/tierra/tierra.obj");
+    Model marte("model/marte/marte.obj");
+    Model jupiter("model/jupiter/jupiter.obj");
+    Model saturn("model/saturn/saturno.obj");
+    Model urano("model/urano/urano.obj");
+    Model neptuno("model/neptuno/neptuno.obj");
+  
     modelShader.use(); 
     modelShader.setInt("material.diffuse", 0);
     modelShader.setInt("material.specular", 1);
     modelShader.setInt("material.emission", 3);
-
+  
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     camera.MovementSpeed = 10; //Optional. Modify the speed of the camera
-
+    
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
-     // --------------------
+        // --------------------
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -162,7 +218,20 @@ int main()
 
         // Render cubemap
         glm::mat4 viewSkybox = glm::mat4(glm::mat3(camera.GetViewMatrix())); // Eliminar la traslaci�n
-        glm::mat4 projectionSkybox = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+        // Calculate the rotation angle
+        float angle = currentFrame * glm::radians(0.5f); // Rotate x degrees per second
+        viewSkybox = glm::rotate(viewSkybox, angle, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around the Y axis
+
+        /// Escalar el cubemap
+        glm::mat4 modelSkybox = glm::mat4(1.0f);
+        modelSkybox = glm::scale(modelSkybox, glm::vec3(1000000.0f, 1000000.0f, 1000000.0f)); // Ajustar la escala del cubemap
+
+        glm::mat4 projectionSkybox = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000000.0f);
+        skyboxShader.use();
+        skyboxShader.setMat4("model", modelSkybox); // Enviar la matriz de modelo al shader
+        skyboxShader.setMat4("view", viewSkybox);
+        skyboxShader.setMat4("projection", projectionSkybox);
         cubeMap.render(skyboxShader, viewSkybox, projectionSkybox);
 
         // Renderizar point lights
@@ -215,12 +284,11 @@ int main()
         modelShader.setFloat("spotLight.constant", 1.0f);
         modelShader.setFloat("spotLight.linear", 0.09);
         modelShader.setFloat("spotLight.quadratic", 0.032);
-
         modelShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
         modelShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
-
+      
     // Configurar matrices
-        glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 300.0f);
+        glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000000.0f);
         glm::mat4 viewModel = camera.GetViewMatrix();
 
         modelShader.setMat4("projection", projectionModel);
@@ -235,6 +303,68 @@ int main()
         modelShader.setMat4("model", model);
         scifi_hallway.Draw(modelShader);
 
+        // render Sol
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3600.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(52.0f, 52.0f, 52.0f)); // Ajustar la escala del Sol
+        modelShader.setMat4("model", model);
+        sol.Draw(modelShader);
+
+        //render de mercurio 
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 2000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala de mercurio
+        modelShader.setMat4("model", model);
+        mercurio.Draw(modelShader);
+
+        //render de venus 
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 2500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f)); // Ajustar la escala de venus
+        modelShader.setMat4("model", model);
+        venus.Draw(modelShader);
+
+        //render de la tierra
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 3000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(70.2f, 70.2f, 70.2f)); // Ajustar la escala de la tierra
+        modelShader.setMat4("model", model);
+        tierra.Draw(modelShader);
+
+        //render de marte
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 3500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(7.5f, 7.5f, 7.5f)); // Ajustar la escala de marte
+        modelShader.setMat4("model", model);
+        marte.Draw(modelShader);
+
+        //render de jupiter
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 5000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(150.5f, 150.5f, 150.5f)); // Ajustar la escala de jupiter
+        modelShader.setMat4("model", model);
+        jupiter.Draw(modelShader);
+
+        //render de saturno
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 7000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(650.0f, 650.0f, 650.0f)); // Ajustar la escala de saturno
+        modelShader.setMat4("model", model);
+        saturn.Draw(modelShader);
+
+        //render de urano
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 8500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(0.43f, 0.43f, 0.43f)); // Ajustar la escala de urano
+        modelShader.setMat4("model", model);
+        urano.Draw(modelShader);
+
+        //render de neptuno
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3500.0f + 9500.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala de neptuno
+        modelShader.setMat4("model", model);
+        neptuno.Draw(modelShader);
 
         //// render far scifi_hallway
         //model = glm::mat4(1.0f);
@@ -260,10 +390,14 @@ int main()
         // Trasladar el modelo al radio deseado desde el centro de rotaci�n
         model = glm::translate(model, glm::vec3(radioDron, 0.0f, 0.0f));
 
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        model = glm::scale(model, glm::vec3(-0.5f, 0.5f, 0.5f));
         modelShader.setMat4("model", model);
         drone.Draw(modelShader);
        
+        // ------- IMPRIMIR POSICIÓN ACTUAL DE LA CÁMARA
+        std::ostringstream oss;
+        oss << "position: " << camera.Position;
+        std::cout << oss.str() << std::endl;
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -279,11 +413,11 @@ int main()
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
+    glm::vec3 prevPosition = camera.Position;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -303,7 +437,6 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         camera.ProcessKeyboard(WALK, deltaTime);
 
-
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
     {
     // Desconmentando esto y comendanto lo otro se arregla el bug de la linterna pero queda interesante xd
@@ -321,7 +454,17 @@ void processInput(GLFWwindow *window)
         FClicked = false; // Reiniciar la variable cuando se suelte el bot?n del mouse
     }
     //camera.Position.y = 3.0f;
+
+    if (checkCollision(camera.Position)) {
+        // Limitar la posición de la cámara a los límites de la caja de colisión
+        std::cout << "------- COLISION DETECTADA -------" << std::endl;
+        camera.Position = prevPosition;
+    
+    }
+
+    camera.Position.y = 3.0f;
 }
+
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
