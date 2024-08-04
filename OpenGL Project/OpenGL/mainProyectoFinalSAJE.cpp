@@ -196,6 +196,7 @@ int main()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     camera.MovementSpeed = 10; //Optional. Modify the speed of the camera
+
     
     // render loop
     // -----------
@@ -438,6 +439,7 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(WALK, deltaTime);
 
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+
     {
     // Desconmentando esto y comendanto lo otro se arregla el bug de la linterna pero queda interesante xd
         //if (!FClicked)
@@ -463,6 +465,76 @@ void processInput(GLFWwindow* window)
     }
 
     camera.Position.y = 3.0f;
+
+    //mover la camara al planeta
+
+    // Check if the '1' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the sun
+        camera.Position = glm::vec3(3600.0f, 3000.0f, -3000.0f);
+    }
+    // Check if the '2' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the mercury
+        camera.Position = glm::vec3(3500.0f + 2000.0f, 3000.0f, -3000.0f);
+    }
+
+    // Check if the '3' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the venus
+        camera.Position = glm::vec3(3500.0f + 2500.0f, 3000.0f, -3000.0f);
+    }
+
+    // Check if the '4' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the earth
+        camera.Position = glm::vec3(3500.0f + 3000.0f, 3000.0f, -3000.0f);
+    }
+
+    // Check if the '5' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the mars
+        camera.Position = glm::vec3(3500.0f + 3500.0f, 3000.0f, -3000.0f);
+    }
+
+    // Check if the '6' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the jupiter
+        camera.Position = glm::vec3(3500.0f + 5000.0f, 3000.0f, -3000.0f);
+    }
+
+    // Check if the '7' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the saturn
+        camera.Position = glm::vec3(3500.0f + 7000.0f, 3000.0f, -3000.0f);
+    }
+
+    // Check if the '8' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the uranus
+        camera.Position = glm::vec3(3500.0f + 8500.0f, 3000.0f, -3000.0f);
+    }
+
+    // Check if the '9' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
+    {
+        // Move the camera to the position of the neptune
+        camera.Position = glm::vec3(3500.0f + 9500.0f, 3000.0f, -3000.0f);
+    }
+    // Check if the '0' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+    {
+		// Move the camera to the position of the nave
+		camera.Position = glm::vec3(-2.0f, 0.0f, 0.0f);
+	}
 }
 
 
