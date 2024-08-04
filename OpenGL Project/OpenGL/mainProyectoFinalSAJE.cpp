@@ -108,6 +108,23 @@ bool checkCollision(const glm::vec3& position) {
     return false;
 }
 
+// arreglo con la rotacion de cada planeta
+float rotationSpeeds[] = {
+25.05f,  // Sol: 25 días
+58.646f, // Mercurio: 58.646 días
+243.0f,  // Venus: 243 días (retrograda)
+1.0f,    // Tierra: 1 día
+1.03f,   // Marte: 1.03 días
+0.413f,  // Júpiter: 0.413 días
+0.444f,  // Saturno: 0.444 días
+0.718f,  // Urano: 0.718 días (retrograda)
+0.671f   // Neptuno: 0.671 días
+};
+
+// variables para calcular la rotacion de la luna
+float moonDistance = 384.4f; // Distancia en miles de kilómetros para mantener la escala
+float moonRotationSpeed = 27.3f; // Periodo de rotación en días
+
 unsigned int loadCubemap(std::vector<std::string> faces);
 
 int main()
@@ -201,6 +218,7 @@ int main()
     Model mercurio("model/mercurio/mercurio.obj");
     Model venus("model/venus/venus.obj");
     Model tierra("model/tierra/tierra.obj");
+    Model moon("model/moon/moon.obj");
     Model marte("model/marte/marte.obj");
     Model jupiter("model/jupiter/jupiter.obj");
     Model saturn("model/saturn/saturno.obj");
@@ -324,16 +342,15 @@ int main()
         modelShader.setMat4("model", model);
         scifi_hallway.Draw(modelShader);
 
-        // render Sol
+       // render Sol
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(3600.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
-        model = glm::scale(model, glm::vec3(52.0f, 52.0f, 52.0f)); // Ajustar la escala del Sol
         modelShader.setMat4("model", model);
         sol.Draw(modelShader);
 
         //render de mercurio 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 5000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[1], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de Mercurio
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala de mercurio
         modelShader.setMat4("model", model);
         mercurio.Draw(modelShader);
@@ -341,6 +358,7 @@ int main()
         //render de venus 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 10000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[2], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de Venus
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f)); // Ajustar la escala de venus
         modelShader.setMat4("model", model);
         venus.Draw(modelShader);
@@ -348,13 +366,34 @@ int main()
         //render de la tierra
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 20000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[3], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de la Tierra
         model = glm::scale(model, glm::vec3(70.2f, 70.2f, 70.2f)); // Ajustar la escala de la tierra
         modelShader.setMat4("model", model);
         tierra.Draw(modelShader);
 
+        // Render de la Luna
+        model = glm::mat4(1.0f);
+        // La posición de la Tierra (debe coincidir con la posición de la Tierra en el código)
+        glm::vec3 earthPosition = glm::vec3(3500.0f + 20000.0f, 3000.0f, -3000.0f);
+
+        // Calcula la posición de la Luna orbitando la Tierra
+        glm::vec3 moonPosition = earthPosition + glm::vec3(
+            moonDistance * cos(currentFrame / moonRotationSpeed),
+            200.0f, // Ajustar la altura de la Luna para que esté visible
+            moonDistance * sin(currentFrame / moonRotationSpeed)
+        );
+
+        model = glm::translate(model, moonPosition); // Posición ajustada para la Luna orbitando la Tierra
+        model = glm::rotate(model, currentFrame / moonRotationSpeed, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de la Luna
+        model = glm::scale(model, glm::vec3(0.232f, 0.232f, 0.232f)); // Ajustar la escala de la Luna (27.2% del tamaño de la Tierra)
+        modelShader.setMat4("model", model);
+        moon.Draw(modelShader);
+
+        
         //render de marte
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 30000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[4], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de Marte
         model = glm::scale(model, glm::vec3(7.5f, 7.5f, 7.5f)); // Ajustar la escala de marte
         modelShader.setMat4("model", model);
         marte.Draw(modelShader);
@@ -362,6 +401,7 @@ int main()
         //render de jupiter
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 40000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[5], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de Júpiter
         model = glm::scale(model, glm::vec3(150.5f, 150.5f, 150.5f)); // Ajustar la escala de jupiter
         modelShader.setMat4("model", model);
         jupiter.Draw(modelShader);
@@ -369,6 +409,7 @@ int main()
         //render de saturno
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 50000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[6], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de Saturno
         model = glm::scale(model, glm::vec3(650.0f, 650.0f, 650.0f)); // Ajustar la escala de saturno
         modelShader.setMat4("model", model);
         saturn.Draw(modelShader);
@@ -376,6 +417,7 @@ int main()
         //render de urano
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 60000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[7], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de Urano
         model = glm::scale(model, glm::vec3(0.43f, 0.43f, 0.43f)); // Ajustar la escala de urano
         modelShader.setMat4("model", model);
         urano.Draw(modelShader);
@@ -383,6 +425,7 @@ int main()
         //render de neptuno
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3500.0f + 80000.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[8], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación de Neptuno
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // Ajustar la escala de neptuno
         modelShader.setMat4("model", model);
         neptuno.Draw(modelShader);
