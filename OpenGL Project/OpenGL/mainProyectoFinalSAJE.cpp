@@ -545,6 +545,21 @@ void processInput(GLFWwindow* window)
 		camera.Position = glm::vec3(-2.0f, 0.0f, 0.0f);
         camera.MovementSpeed = 10.0f;
 	}
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+    {
+        
+        camera.MovementSpeed = 10000.0f;
+    }
+    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+    {
+
+        camera.MovementSpeed = 1000.0f;
+    }
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+    {
+
+        camera.MovementSpeed = 100.0f;
+    }
 }
 
 
