@@ -21,6 +21,11 @@ struct AABB { // Estructura AABB para caja de colisiones
 
     AABB(glm::vec3 min, glm::vec3 max) : min(min), max(max) {}
 };
+struct CameraSettings { // Vistas de cámara para cada planeta
+    glm::vec3 position;
+    float speed;
+    bool inSpaceship;
+};
 
 std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
     os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
@@ -52,6 +57,7 @@ float lastFrame = 0.0f;
 
 bool flashlightTurnedOn = true;
 bool FClicked = false;
+bool inSpaceship = true;
 
 // Coordenadas de paredes de la nave para colisión
 std::vector<AABB> collisionBoxes = {
@@ -75,6 +81,20 @@ std::vector<AABB> collisionBoxes = {
     AABB(glm::vec3(-16.0f, 3.0f, -20.0f), glm::vec3(-14.0f, 6.0f, -10.5f)),
     AABB(glm::vec3(-14.0f, 3.0f, -20.0f), glm::vec3(-4.5f, 6.0f, -18.0f)),
     AABB(glm::vec3(-4.5f, 3.0f, -35.0f), glm::vec3(-2.5f, 6.0f, -18.0f))
+};
+
+// Coordenadas de ubicación de cámara
+CameraSettings cameraSettings[] = {
+    {glm::vec3(-0.651043f, 3.10671f, 1.98734f), 10.0f, true},      // 0
+    {glm::vec3(1069.51f, 2885.28f, -4001.84f), 500.0f, false},     // 1
+    {glm::vec3(8478.86f, 2992.59f, -3040.43f), 30.0f, false},      // 2
+    {glm::vec3(13484.5f, 3010.7f, -3063.85f), 30.0f, false},       // 3
+    {glm::vec3(23455.5f, 3003.19f, -2994.04f), 30.0f, false},      // 4
+    {glm::vec3(33489.2f, 3009.61f, -3026.56f), 30.0f, false},      // 5
+    {glm::vec3(43380.6f, 3049.45f, -3395.93f), 120.0f, false},     // 6
+    {glm::vec3(52656.1f, 3117.08f, -2911.97f), 170.0f, false},     // 7
+    {glm::vec3(63101.7f, 2967.07f, -2832.81f), 200.0f, false},     // 8
+    {glm::vec3(83689.2f, 3034.89f, -2672.7f), 200.0f, false}       // 9
 };
 
 // Método para verificar colisiones.
@@ -382,7 +402,6 @@ int main()
         glm::vec3 axis(0.0f, 0.0f, 1.0f); // Ajusta este vector seg�n sea necesario
         glm::vec3 center(-7.0f, 0.0f, 0.0f); // Ajusta el centro seg�n sea necesario
         axis = glm::normalize(axis);
-
         model = glm::mat4(1.0f);
         // Trasladar el modelo al centro de rotaci�n
         model = glm::translate(model, center);
@@ -427,11 +446,15 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
-
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.ProcessKeyboard(UP, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        camera.ProcessKeyboard(DOWN, deltaTime);
+    if (!inSpaceship) {
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+            camera.ProcessKeyboard(UP, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+            camera.ProcessKeyboard(DOWN, deltaTime);
+    }
+    else {
+        camera.Position.y = 3.0f;
+    }
 
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         camera.ProcessKeyboard(RUN, deltaTime);
@@ -461,90 +484,19 @@ void processInput(GLFWwindow* window)
         // Limitar la posición de la cámara a los límites de la caja de colisión
         std::cout << "------- COLISION DETECTADA -------" << std::endl;
         camera.Position = prevPosition;
-        camera.Position.y = 3.0f;
     }
-
-    //camera.Position.y = 3.0f;
 
     //mover la camara al planeta
-
-    // 1
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-    {
-        // mover al sol
-        camera.Position = glm::vec3(1069.51f, 2885.28f, -4001.84f);
-        camera.MovementSpeed = 500.0f;
+    for (int key = GLFW_KEY_0; key <= GLFW_KEY_9; ++key) {
+        if (glfwGetKey(window, key) == GLFW_PRESS) {
+            int index = key - GLFW_KEY_0;
+            camera.Position = cameraSettings[index].position;
+            camera.MovementSpeed = cameraSettings[index].speed;
+            inSpaceship = cameraSettings[index].inSpaceship;
+            break; // Salir del bucle después de encontrar la tecla presionada
+        }
     }
-    // 2
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-    {
-        // mover a mercurio
-        camera.Position = glm::vec3(8478.86f, 2992.59f, -3040.43f);
-        camera.MovementSpeed = 30.0f;
-    }
-
-    // 3
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-    {
-        // mover a venus
-        camera.Position = glm::vec3(13484.5f, 3010.7f, -3063.85f);
-        camera.MovementSpeed = 30.0f;
-    }
-
-    // 4
-    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-    {
-        // mover a tierra
-        camera.Position = glm::vec3(23455.5f, 3003.19f, -2994.04f);
-        camera.MovementSpeed = 30.0f;
-    }
-
-    // 5
-    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-    {
-        // mover a marte
-        camera.Position = glm::vec3(33489.2f, 3009.61f, -3026.56f);
-        camera.MovementSpeed = 30.0f;
-    }
-
-    // 6
-    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
-    {
-        // mover a jupiter
-        camera.Position = glm::vec3(43380.6f, 3049.45f, -3395.93f);
-        camera.MovementSpeed = 120.0f;
-    }
-
-    // 7
-    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
-    {
-        // mover a saturno
-        camera.Position = glm::vec3(52656.1f, 3117.08f, -2911.97f);
-        camera.MovementSpeed = 170.0f;
-    }
-
-    // 8
-    if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
-    {
-        // mover a urano
-        camera.Position = glm::vec3(63101.7f, 2967.07f, -2832.81f);
-        camera.MovementSpeed = 200.0f;
-    }
-
-    // 9
-    if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
-    {
-        // Mover a neptuno
-        camera.Position = glm::vec3(83689.2f, 3034.89f, -2672.7f);
-        camera.MovementSpeed = 200.0f;
-    }
-    // 0
-    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
-    {
-		// mover a nave
-		camera.Position = glm::vec3(-0.651043f, 3.10671f, 1.98734f);
-        camera.MovementSpeed = 10.0f;
-	}
+    
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
     {
         
