@@ -30,13 +30,6 @@
 - **Interactividad**: Controles de usuario para explorar el entorno.
 
 
-<p align="center">
-  <img src="Recursos/images/sistemaCompleto.png" alt="sistema Completo" width="600">
-</p>
-<p align="center">
-  <img src="Recursos/images/interiorNave.png" alt="Interior de la nave" width="600">
-</p>
-
 
 
 
