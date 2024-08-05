@@ -342,8 +342,11 @@ int main()
         modelShader.setMat4("model", model);
         scifi_hallway.Draw(modelShader);
 
-       // render Sol
+        // Render Sol
         model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3900.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
+        model = glm::rotate(model, currentFrame / rotationSpeeds[0], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación del sol
+        model = glm::scale(model, glm::vec3(87.0f, 87.0f, 87.0f)); // Ajustar la escala del Sol
         modelShader.setMat4("model", model);
         sol.Draw(modelShader);
 
