@@ -203,11 +203,13 @@ int main()
     Shader skyboxShader("shaders/shader_skybox.vs", "shaders/shader_skybox.fs");
     Shader lightShader("shaders/shader_emisorLuz.vs", "shaders/shader_emisorLuz.fs");
 
+    glm::vec3 sunPosition = glm::vec3(3900.0f, 3000.0f, -3000.0f);
+
     glm::vec3 pointLightPositions[] = {
-        glm::vec3( 0.0f,  4.0f,  -3.0f),
-        glm::vec3( 2.3f, -3.3f, -4.0f),
-        glm::vec3(-4.0f,  2.0f, -12.0f),
-        glm::vec3( 0.0f,  0.0f, -3.0f)
+        glm::vec3( 0.0f,  4.0f,  0.0f),
+        sunPosition,
+        glm::vec3( 0.0f,  4.0f,  -7.0f),
+        glm::vec3( 0.0f,  4.0f,  7.0f)
     };
 
     // load models
@@ -234,7 +236,6 @@ int main()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     camera.MovementSpeed = 10; //Optional. Modify the speed of the camera
-
     
     // render loop
     // -----------
@@ -285,10 +286,10 @@ int main()
         modelShader.setFloat("material.shininess", 32.0f);
 
         //// directional light
-        modelShader.setVec3("dirLight.direction", -0.2f, 1.0f, 1.0f);
-        modelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-        modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-        modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        //modelShader.setVec3("dirLight.direction", -0.2f, 1.0f, 1.0f);
+        //modelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        //modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        //modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
         // point light 1
         modelShader.setVec3("pointLights[0].position", pointLightPositions[0]);
@@ -296,12 +297,39 @@ int main()
         modelShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
         modelShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
         
-        // modelShader.setFloat("pointLights[0].constant", 1.0f);
-        // modelShader.setFloat("pointLights[0].linear", 0.22);
-        // modelShader.setFloat("pointLights[0].quadratic", 0.20);
         modelShader.setFloat("pointLights[0].constant", 1.0f);
         modelShader.setFloat("pointLights[0].linear", 0.09);
         modelShader.setFloat("pointLights[0].quadratic", 0.032);
+
+        // point light sol
+        modelShader.setVec3("pointLights[1].position", sunPosition);
+        modelShader.setVec3("pointLights[1].ambient", 0.2f, 0.1f, 0.1f);
+        modelShader.setVec3("pointLights[1].diffuse", 0.95f, 0.9f, 0.9f);
+        modelShader.setVec3("pointLights[1].specular", 0.0f, 0.0f, 0.0f);
+
+        modelShader.setFloat("pointLights[1].constant", 1.0f);
+        modelShader.setFloat("pointLights[1].linear", 0.000000014f);
+        modelShader.setFloat("pointLights[1].quadratic", 0.0000000007f);
+
+        // point light 2
+        modelShader.setVec3("pointLights[2].position", pointLightPositions[2]);
+        modelShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+        modelShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+
+        modelShader.setFloat("pointLights[2].constant", 1.0f);
+        modelShader.setFloat("pointLights[2].linear", 0.09);
+        modelShader.setFloat("pointLights[2].quadratic", 0.032);
+
+        // point light 3
+        modelShader.setVec3("pointLights[3].position", pointLightPositions[3]);
+        modelShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+        modelShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+
+        modelShader.setFloat("pointLights[3].constant", 1.0f);
+        modelShader.setFloat("pointLights[3].linear", 0.09);
+        modelShader.setFloat("pointLights[3].quadratic", 0.032);
 
         // flashlight (spotlight)
         modelShader.setVec3("spotLight.position", camera.Position);
@@ -330,9 +358,22 @@ int main()
         glm::mat4 projectionModel = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000000.0f);
         glm::mat4 viewModel = camera.GetViewMatrix();
 
+        lightShader.use();
+        lightShader.setMat4("projection", projectionModel);
+        lightShader.setMat4("view", viewModel);
+
+
+        // Render Sol
+        glm::mat4 modelLight = glm::mat4(1.0f);
+        modelLight = glm::translate(modelLight, sunPosition); // Posición ajustada para estar lejos del dron y la nave
+        modelLight = glm::rotate(modelLight, currentFrame / rotationSpeeds[0], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación del sol
+        modelLight = glm::scale(modelLight, glm::vec3(87.0f, 87.0f, 87.0f)); // Ajustar la escala del Sol
+        lightShader.setMat4("model", modelLight);
+        sol.Draw(lightShader);
+
+        modelShader.use();
         modelShader.setMat4("projection", projectionModel);
         modelShader.setMat4("view", viewModel);
-
 
         // render scifi_hallway
         glm::mat4 model = glm::mat4(1.0f);
@@ -341,14 +382,6 @@ int main()
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         modelShader.setMat4("model", model);
         scifi_hallway.Draw(modelShader);
-
-        // Render Sol
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(3900.0f, 3000.0f, -3000.0f)); // Posición ajustada para estar lejos del dron y la nave
-        model = glm::rotate(model, currentFrame / rotationSpeeds[0], glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación del sol
-        model = glm::scale(model, glm::vec3(87.0f, 87.0f, 87.0f)); // Ajustar la escala del Sol
-        modelShader.setMat4("model", model);
-        sol.Draw(modelShader);
 
         //render de mercurio 
         model = glm::mat4(1.0f);
@@ -382,7 +415,7 @@ int main()
         // Calcula la posición de la Luna orbitando la Tierra
         glm::vec3 moonPosition = earthPosition + glm::vec3(
             moonDistance * cos(currentFrame / moonRotationSpeed),
-            200.0f, // Ajustar la altura de la Luna para que esté visible
+            0.0f, 
             moonDistance * sin(currentFrame / moonRotationSpeed)
         );
 
@@ -511,13 +544,13 @@ void processInput(GLFWwindow* window)
 
     {
     // Desconmentando esto y comendanto lo otro se arregla el bug de la linterna pero queda interesante xd
-        //if (!FClicked)
-        //{
-        //    FClicked = true; // Marcar que se ha hecho clic
-        //    flashlightTurnedOn = !flashlightTurnedOn; // Cambiar el estado de la linterna
-        //}
-        FClicked = true; // Marcar que se ha hecho clic
-        flashlightTurnedOn = !flashlightTurnedOn; // Cambiar el estado de la linterna
+        if (!FClicked)
+        {
+            FClicked = true; // Marcar que se ha hecho clic
+            flashlightTurnedOn = !flashlightTurnedOn; // Cambiar el estado de la linterna
+        }
+        //FClicked = true; // Marcar que se ha hecho clic
+        //flashlightTurnedOn = !flashlightTurnedOn; // Cambiar el estado de la linterna
     }
 
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE)
@@ -539,6 +572,7 @@ void processInput(GLFWwindow* window)
             camera.Position = cameraSettings[index].position;
             camera.MovementSpeed = cameraSettings[index].speed;
             inSpaceship = cameraSettings[index].inSpaceship;
+            flashlightTurnedOn = false;
             break; // Salir del bucle después de encontrar la tecla presionada
         }
     }
